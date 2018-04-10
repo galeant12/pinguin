@@ -34,15 +34,13 @@ Route::group(['prefix' => 'v1'], function(){
 	Route::post('/company/register','CompanyController@create');
 	Route::post('/company/update/{id}','CompanyController@update');
 	Route::delete('/company/{id}','CompanyController@delete');
-	// ==== COMPANY LOGIN ==== //
-	Route::post('/company/login','CompanyController@login');
 
 	// ==== DESTINATION ==== //
-	Route::get('/admin','AdminController@all');
-	Route::get('/admin/{id}','AdminController@one');
-	Route::post('/admin/register','AdminController@create');
-	Route::post('/admin/update/{id}','AdminController@update');
-	Route::delete('/admin/{id}','AdminController@delete');
+	Route::get('/destination','AdminController@all');
+	Route::get('/destination/{id}','AdminController@one');
+	Route::post('/destination/add','AdminController@create');
+	Route::post('/destination/update/{id}','AdminController@update');
+	Route::delete('/destination/{id}','AdminController@delete');
 
 	// ==== ACTIVITY ==== //
 	Route::get('/admin','AdminController@all');

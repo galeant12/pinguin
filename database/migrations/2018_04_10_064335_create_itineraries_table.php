@@ -13,9 +13,27 @@ class CreateItinerariesTable extends Migration
      */
     public function up()
     {
-        Schema::create('itineraries', function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create('itinerary', function (Blueprint $table) {
+            $table->increments('itineraryId');
+            $table->string('day');
+            $table->time('startTime');
+            $table->time('endTime');
+            $table->string('agendaCategory');
+            $table->string('agenda');
+            $table->text('description');
+            $table->unsignedInteger('productId');
+            $table->unsignedInteger('destinationId');
             $table->timestamps();
+
+            $table->foreign('productId')
+                ->references('productId')->on('product')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+
+            $table->foreign('destinationId')
+                ->references('destinationId')->on('destination')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
     }
 
@@ -26,6 +44,6 @@ class CreateItinerariesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('itineraries');
+        Schema::dropIfExists('itinerary');
     }
 }

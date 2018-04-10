@@ -13,9 +13,20 @@ class CreateProductDestinationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('product__destinations', function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create('product_destination', function (Blueprint $table) {
+            $table->unsignedInteger('productId');
+            $table->unsignedInteger('destinationId');
             $table->timestamps();
+
+            $table->foreign('productId')
+                  ->references('productId')->on('product')
+                  ->onDelete('cascade')
+                  ->onUpdate('cascade');
+
+            $table->foreign('destinationId')
+                  ->references('destinationId')->on('destination')
+                  ->onDelete('cascade')
+                  ->onUpdate('cascade');
         });
     }
 
@@ -26,6 +37,6 @@ class CreateProductDestinationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('product__destinations');
+        Schema::dropIfExists('product_destination');
     }
 }

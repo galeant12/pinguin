@@ -13,9 +13,20 @@ class CreateProductActivitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('product__activities', function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create('product_activity', function (Blueprint $table) {
+            $table->unsignedInteger('productId');
+            $table->unsignedInteger('activityId');
             $table->timestamps();
+
+            $table->foreign('productId')
+                  ->references('productId')->on('product')
+                  ->onDelete('cascade')
+                  ->onUpdate('cascade');
+
+            $table->foreign('activityId')
+                  ->references('activityId')->on('activity')
+                  ->onDelete('cascade')
+                  ->onUpdate('cascade');
         });
     }
 
@@ -26,6 +37,6 @@ class CreateProductActivitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('product__activities');
+        Schema::dropIfExists('product_activity');
     }
 }

@@ -10,8 +10,15 @@ class CompanyController extends Controller
     
 	public function all()
 	{
-		$data = Company::with('users')->with('products')->get();
-
+        $data = Company::with([
+                'products.prices',
+                'products.files',
+                'products.schedules',
+                'products.itineraries',
+                'products.activities',
+                'products.destinations'
+            ])
+            ->get();
 
 		$response = [
 			'list_company' => $data
@@ -22,7 +29,16 @@ class CompanyController extends Controller
 
 	public function one($id)
 	{
-		$data = Company::with('users')->with('products')->where('companyId', $id)->first();
+		 $data = Company::with([
+                'products.prices',
+                'products.files',
+                'products.schedules',
+                'products.itineraries',
+                'products.activities',
+                'products.destinations'
+            ])
+            ->where('companyId',$id)
+            ->first();
 
 		$response = [
 			'data_company ' => $data
@@ -33,14 +49,86 @@ class CompanyController extends Controller
 
     public function create(Request $req)
     {
-    	$email = $req->input('email');
-    	$password  = md5($req->input('password'));
+    	$companyCode = rand(2,1000);
+        $companyName = $req->input('companyName');
+        $companyEmail = $req->input('companyEmail');
+        $companyPhone = $req->input('companyPhone');
+        $companyWebsite = $req->input('companyWebsite');
+        $companyAddress = $req->input('companyAddress');
+        $ownerName = $req->input('ownerName');
+        $ownerEmail = $req->input('ownerEmail');
+        $status = 'Need Kuration';
 
-    	
+        // $validation1 = Company::where('companyEmail')->first();
+        // if($validation1 != null)
+        // {
+        //     $validation2 = Company::where('companyName')->first();
+        // }
+        $create = new Company;
+        $create->companyCode = $companyCode;
+        $create->companyName = $companyName;
+        $create->companyEmail = $companyEmail;
+        $create->companyPhone = $companyPhone;
+        $create->companyWebsite = $companyWebsite;
+        $create->companyAddress = $companyAddress;
+        $create->ownerName = $ownerName;
+        $create->ownerEmail = $ownerEmail;
+        $create->status = $status;
+        $create->save();
+
+        if($create)
+        {
+            $response = [
+                'msg' => 'company succesfl created',
+                'data_company' => $req->all()
+            ];
+
+            return response()->json($response);
+        }else{
+            $response = [
+                'msg' => 'something wrong, please contact admin'
+            ];
+
+            return response()->json($response);
+        }
     }
     public function update(Request $req, $id)
     {
-    	
+        $companyName = $req->input('companyName');
+        $companyEmail = $req->input('companyEmail');
+        $companyPhone = $req->input('companyPhone');
+        $companyWebsite = $req->input('companyWebsite');
+        $companyAddress = $req->input('companyAddress');
+        $ownerName = $req->input('ownerName');
+        $ownerEmail = $req->input('ownerEmail');
+        $status = 'Clear Kuration';
+
+        $update = Company::where('companyId',$id)
+                ->update([
+                    'companyName' => $companyName,
+                    'companyEmail' => $companyEmail,
+                    'companyPhone' => $companyPhone,
+                    'companyWebsite' => $companyWebsite,
+                    'companyAddress' => $companyAddress,
+                    'ownerName' => $ownerName,
+                    'ownerEmail' => $ownerEmail
+                ]);
+
+        if($update)
+        {
+            $response = [
+                'msg' => 'company with id-'.$id.' already updated',
+                'data_update' => $req->all()
+            ];
+
+            return response()->json($response);
+        }else{
+            $response = [
+                'msg' => 'something wrong, please contact admin'
+            ];
+
+            return response()->json($response);
+        }
     }
     public function delete($id)
     {
@@ -60,44 +148,5 @@ class CompanyController extends Controller
     		return response()->json($response);
 
     	}
-    }
-
-    public function login(Request $req)
-    {
-    	// $email = $req->input('email');
-    	// $password  = md5($req->input('password'));
-
-    	// $validation1 = Admin::where('email',$email)->get();
-
-    	// if(count($validation1) == 1)
-    	// {	
-    	// 	$validation2 = Admin::where([
-	    // 		'email' => $email,
-	    // 		'password' => $password,
-	    // 	])->get();
-
-	    // 	if(count($validation2) == 1)
-	    // 	{
-	    // 		$response = [
-	    // 			'msg' => 'admin-'.$email.'-login',
-	    // 			'redirect_url' => 'www.dashboard.com'
-	    // 		];
-
-	    // 		return response()->json($response);
-	    // 	}else{
-	    // 		$response = [
-	    // 			'msg' => 'wrong password',
-	    // 			'redirect_url' => 'www.login.com'
-	    // 		];
-
-	    // 		return response()->json($response);
-	    // 	}
-    	// }else{
-    	// 	$response = [
-    	// 		'msg' => 'wrong email',
-    	// 		'redirect_url' => 'www.login.com'
-    	// 	];
-    	// 	return response()->json($response);
-    	// }
     }
 }
