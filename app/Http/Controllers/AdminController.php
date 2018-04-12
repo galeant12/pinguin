@@ -15,7 +15,7 @@ class AdminController extends Controller
 			'list_admin' => $data
 		];
 
-		return response()->json($response);
+		return response()->json($data);
 	}
 
 	public function one($id)
